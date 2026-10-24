@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>屁眼派對 · 數位分身</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+    { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    } }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="brand">🏠 <b>屁眼派對</b><span>數位分身</span></div>
+    <nav class="tabs" role="tablist">
+      <button data-view="plan" class="active">🗺️ 平面圖</button>
+      <button data-view="3d">🧊 3D 全覽</button>
+      <button data-view="gallery">🖼️ 照片牆</button>
+    </nav>
+    <div class="actions">
+      <span id="save-status" class="save-status"></span>
+      <button id="btn-unlock" title="輸入編輯密碼後才能修改">🔒 編輯</button>
+      <button id="btn-lock" title="這個瀏覽器不再保留編輯權限">🔓 鎖定</button>
+      <label class="btn primary edit-ui" title="選照片後，點平面圖上的位置放置">📷 ＋ 照片<input id="file-photos" type="file" accept="image/*" multiple hidden></label>
+      <button id="btn-edit" class="edit-ui" title="拖曳房間、拉邊調整大小">✏️ 編輯格局</button>
+      <button id="btn-add-room" class="edit-only">＋ 房間</button>
+      <button id="btn-export" title="下載備份 JSON">⬇️ 匯出</button>
+      <label class="btn edit-ui" title="從 JSON 還原">⬆️ 匯入<input id="file-import" type="file" accept="application/json" hidden></label>
+    </div>
+  </header>
+
+  <div id="app">
+    <aside id="sidebar">
+      <section class="summary">
+        <h2>整個房子</h2>
+        <div class="total"><b id="total-main"></b><small id="total-alt"></small></div>
+        <dl id="total-breakdown"></dl>
+        <div class="seg" role="group" aria-label="面積單位">
+          <button data-unit="ping">坪</button>
+          <button data-unit="m2">m²</button>
+        </div>
+        <label class="switch"><input type="checkbox" id="opt-names"><span></span>顯示格局名稱</label>
+        <label class="switch"><input type="checkbox" id="opt-area"><span></span>顯示大小</label>
+      </section>
+      <section>
+        <h2>房間</h2>
+        <ul id="room-list"></ul>
+      </section>
+    </aside>
+
+    <main>
+      <div id="view-plan" class="view active">
+        <svg id="plan"></svg>
+        <div class="plan-hint" id="plan-hint">把手機照片直接拖到平面圖上 · 點 📷 看照片 · 拖藍點轉方向</div>
+        <div class="drop-overlay">放開，照片就會釘在這個位置</div>
+      </div>
+      <div id="view-3d" class="view">
+        <div class="plan-hint">拖曳旋轉 · 滾輪縮放 · 右鍵平移 · 點地板看那個房間的照片</div>
+      </div>
+      <div id="view-gallery" class="view">
+        <div id="gallery"></div>
+      </div>
+    </main>
+  </div>
+
+  <div id="viewer" hidden>
+    <div class="v-top">
+      <div class="v-meta"><b id="v-room"></b><span id="v-date"></span></div>
+      <input id="v-caption" placeholder="加個說明，例如：書櫃第二層放工具">
+      <button id="v-locate" title="在平面圖上顯示">📍 平面圖</button>
+      <button id="v-delete" class="danger edit-ui" title="刪除照片">🗑</button>
+      <button id="v-close" title="關閉（Esc）">✕</button>
+    </div>
+    <div class="v-stage">
+      <button id="v-prev" class="v-nav" title="上一張（←）">‹</button>
+      <img id="v-img" alt="">
+      <button id="v-next" class="v-nav" title="下一張（→）">›</button>
+    </div>
+    <div id="v-strip"></div>
+  </div>
+
+  <dialog id="dlg">
+    <form method="dialog">
+      <h3 id="dlg-title"></h3>
+      <div id="dlg-fields"></div>
+      <div id="dlg-extras"></div>
+      <menu>
+        <button value="delete" id="dlg-delete" class="danger" formnovalidate>刪除</button>
+        <span class="spacer"></span>
+        <button value="cancel" formnovalidate>取消</button>
+        <button value="ok" class="primary">儲存</button>
+      </menu>
+    </form>
+  </dialog>
+  <dialog id="ask">
+    <form method="dialog">
+      <p id="ask-msg"></p>
+      <menu>
+        <span class="spacer"></span>
+        <button value="no">取消</button>
+        <button value="yes" id="ask-ok" class="danger-fill">刪除</button>
+      </menu>
+    </form>
+  </dialog>
+  <div id="toast"></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

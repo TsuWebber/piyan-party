@@ -1,0 +1,9 @@
+{
+  "name": "piyan-party",
+  "private": true,
+  "type": "module",
+  "description": "屁眼派對 · 我們家的數位分身",
+  "dependencies": {
+    "@vercel/blob": "^2.8.0"
+  }
+}
